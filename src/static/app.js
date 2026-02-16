@@ -5,13 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageDiv = document.getElementById("message");
 
   // Function to fetch activities from API
-    async function fetchActivities() {
+  async function fetchActivities() {
     try {
       const response = await fetch("/activities");
       const activities = await response.json();
 
       // Clear loading message
       activitiesList.innerHTML = "";
+
+      // Reset activity select to avoid duplicate options
+      activitySelect.innerHTML = '<option value="" disabled selected>Select an activity</option>';
 
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
@@ -104,6 +107,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageDiv.textContent = result.message;
         messageDiv.className = "message success";
         signupForm.reset();
+        // Refresh activities so the new participant appears immediately
+        fetchActivities();
       } else {
         messageDiv.textContent = result.detail || "An error occurred";
         messageDiv.className = "message error";
